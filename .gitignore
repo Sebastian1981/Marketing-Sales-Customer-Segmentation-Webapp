@@ -130,3 +130,6 @@ dmypy.json
 
 # dont sync data folder
 /data
+
+# dont save keras models
+*.h5
