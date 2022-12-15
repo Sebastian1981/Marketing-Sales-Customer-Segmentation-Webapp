@@ -133,3 +133,6 @@ dmypy.json
 
 # dont save keras models
 *.h5
+
+# dont sync model Artifacts
+/artifacts
