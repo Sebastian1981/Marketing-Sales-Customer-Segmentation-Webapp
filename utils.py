@@ -1,8 +1,15 @@
 import streamlit as st
+import numpy as np
 import pandas as pd
 import pickle
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-#@st.cache # cache the conversion to prevent computation on every rerun
+
+################################################
+# Data Preparation
+################################################
+
 def prepare_data(df:pd.DataFrame, numeric_columns, categorical_columns)->pd.DataFrame:
     """ prepare dataset for segmentation"""
     
@@ -45,6 +52,16 @@ def prepare_data(df:pd.DataFrame, numeric_columns, categorical_columns)->pd.Data
 
     return df
 
+@st.cache
+def convert_df(df:pd.DataFrame):
+    """convert dataframe to csv format"""
+    return df.to_csv().encode('utf-8')
+
+
+
+################################################
+# Cluster Prediction
+################################################
 
 #@st.cache 
 def predict_cluster(df:pd.DataFrame, numeric_columns, categorical_columns)->pd.DataFrame:
@@ -76,7 +93,68 @@ def predict_cluster(df:pd.DataFrame, numeric_columns, categorical_columns)->pd.D
     return df
 
 
-@st.cache
-def convert_df(df:pd.DataFrame):
-    """convert dataframe to csv format"""
-    return df.to_csv().encode('utf-8')
+################################################
+# Cluster Visualization
+################################################
+
+def plot_cluster_distribution(df:pd.DataFrame):
+    """plot cluster distribution"""
+    fig = plt.figure(figsize=(10, 4))
+    sns.histplot(
+        data=df, 
+        x='cluster',
+        bins=15)
+    plt.title('Cluster Distribution')
+    plt.grid('on')
+    st.pyplot(fig)
+
+def plot_numeric_features(df:pd.DataFrame, numeric_columns):
+    """plot feature distributon for each cluster"""        
+    options = st.multiselect(
+        'Select Numeric Features',
+        numeric_columns)
+
+    for feat in options:
+
+        fig, ax = plt.subplots(
+            figsize=(25,5), 
+            nrows=1, ncols=df['cluster'].nunique(), 
+            sharex=True)
+        
+        for c in np.sort(df['cluster'].unique()):
+
+            sns.histplot(
+                data=df[df['cluster']==c], 
+                x=feat,
+                bins=15,
+                kde=True,
+                ax=ax[c])
+            ax[c].set_title(feat + ' Distribution in Cluster '+ str(c))
+            ax[c].grid()
+        st.pyplot(fig)
+
+# visualize categorical features for each cluster
+def plot_categorical_features(df, categorical_columns):
+    """visualize categorical feature distributions for each cluster"""
+
+    options = st.multiselect(
+        'Select Categorical Features',
+        categorical_columns)
+
+    for feat in options:
+
+        fig, ax = plt.subplots(
+            figsize=(25,5), 
+            nrows=1, ncols=df['cluster'].nunique(), 
+            sharex=True)
+        
+        for c in np.sort(df['cluster'].unique()):
+
+            sns.histplot(
+                data=df[df['cluster']==c], 
+                x=feat,
+                ax=ax[c])
+            ax[c].set_title(feat + ' Distribution in Cluster '+ str(c))
+            ax[c].set_xticks(ax[c].get_xticks(), ax[c].get_xticklabels(), rotation=90)
+            ax[c].grid()
+        st.pyplot(fig)

@@ -5,7 +5,6 @@ from path import Path
 #from utils import convert_df
 from segmentation_app import run_segment_app
 
-
 def main():
     st.title("Let´s Segment Your Customers!")
 

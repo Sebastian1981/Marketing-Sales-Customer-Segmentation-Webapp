@@ -1,7 +1,9 @@
 import streamlit as st
+import numpy as np
 import pandas as pd
-from utils import prepare_data, predict_cluster, convert_df
-
+from utils import prepare_data, predict_cluster, convert_df, plot_cluster_distribution, plot_numeric_features, plot_categorical_features
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def run_segment_app():
 
@@ -27,7 +29,6 @@ def run_segment_app():
         ############################################
         # Predict Cluster
         ############################################
-        
         # prepare data and predict clusters
         df = prepare_data(df, numeric_columns, categorical_columns)
 
@@ -44,3 +45,15 @@ def run_segment_app():
             file_name='df_clustered.csv',
             mime='text/csv',
         )
+
+        ############################################
+        # Visualize Cluster
+        ############################################
+        # visualize cluster distribution
+        plot_cluster_distribution(df)
+
+        # visualize numeric features for each cluster
+        plot_numeric_features(df, numeric_columns)
+
+        # visualize categorical features for each cluster
+        plot_categorical_features(df, categorical_columns)
