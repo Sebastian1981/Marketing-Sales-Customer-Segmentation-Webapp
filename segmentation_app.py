@@ -1,9 +1,11 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-from utils import prepare_data, predict_cluster, convert_df, plot_cluster_distribution, plot_numeric_features, plot_categorical_features
+from utils import prepare_data, predict_cluster, convert_df, plot_cluster_distribution, plot_numeric_features, plot_categorical_features, plot_bivariate_distribution, calculate_shap_values
 import matplotlib.pyplot as plt
 import seaborn as sns
+import shap
+from streamlit_shap import st_shap
 
 def run_segment_app():
 
@@ -49,6 +51,7 @@ def run_segment_app():
         ############################################
         # Visualize Cluster
         ############################################
+        st.subheader('Plot Univariate Distributions')
         # visualize cluster distribution
         plot_cluster_distribution(df)
 
@@ -57,3 +60,15 @@ def run_segment_app():
 
         # visualize categorical features for each cluster
         plot_categorical_features(df, categorical_columns)
+
+        # Plot Bivariate Distributions for both numeric and categorical data
+        st.subheader('Plot Bivariate Distributions')
+        plot_bivariate_distribution(df, numeric_columns, categorical_columns)
+
+
+        # Explain Clusters
+        #shap_values = calculate_shap_values(df, numeric_columns, categorical_columns)
+        
+         
+        
+        
