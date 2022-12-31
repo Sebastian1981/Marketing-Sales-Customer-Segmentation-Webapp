@@ -1,0 +1,5 @@
+fastapi==0.88.0
+feature_engine==1.5.2
+pandas==1.4.2
+scikit_learn==1.2.0
+uvicorn==0.20.0
