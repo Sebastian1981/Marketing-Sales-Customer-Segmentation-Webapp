@@ -47,7 +47,7 @@ def predict_bmi(weight:float, height:float):
 
 # Define customer segmentation prediction function
 @app.post('/predict')
-def predict(
+async def predict(
     credit_score: float,
     country: str,
     gender: str,
