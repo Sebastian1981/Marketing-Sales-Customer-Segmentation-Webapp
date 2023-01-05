@@ -1,11 +1,7 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
-from utils import prepare_data, predict_cluster, convert_df, plot_cluster_distribution, plot_numeric_features, plot_categorical_features, plot_bivariate_distribution, calculate_shap_values
-import matplotlib.pyplot as plt
-import seaborn as sns
-import shap
-from streamlit_shap import st_shap
+from utils import prepare_data, predict_cluster, convert_df, plot_cluster_distribution, plot_numeric_features, plot_categorical_features, pie_plot_cluster_distribution
+
 
 def run_segment_app():
 
@@ -14,11 +10,12 @@ def run_segment_app():
         ############################################
         # Read Raw CSV File
         ############################################
-        df = pd.read_csv(uploaded_file)
-        # Relabel taget colum since there is no target in unsupervised learning
-        df.rename(columns={"Target": "Income"}, inplace=True)
-        # Correct the Income column typo
-        df['Income'] = df['Income'].apply(lambda x: x.replace('.', ''))
+        df = pd.read_csv(uploaded_file, index_col='customer_id')
+        # drop churn column for segmentation
+        df.drop('churn', axis=1, inplace=True)
+        # change type of categorical columns "credit_card" and "active_member"
+        df['credit_card'] = df['credit_card'].apply(lambda x: 'yes' if x == 1 else 'no')
+        df['active_member'] = df['active_member'].apply(lambda x: 'yes' if x == 1 else 'no')
 
         ############################################
         # Get Column Types
@@ -33,10 +30,8 @@ def run_segment_app():
         ############################################
         # prepare data and predict clusters
         df = prepare_data(df, numeric_columns, categorical_columns)
-
         # prepare data and predict clusters
         df = predict_cluster(df, numeric_columns, categorical_columns)
-
         # show labeled data
         st.write(df)
 
@@ -51,23 +46,19 @@ def run_segment_app():
         ############################################
         # Visualize Cluster
         ############################################
-        st.subheader('Plot Univariate Distributions')
+        
         # visualize cluster distribution
+        st.subheader('Plot Cluster Distributions')
+        pie_plot_cluster_distribution(df)
         plot_cluster_distribution(df)
 
         # visualize numeric features for each cluster
+        st.subheader('Plot Univariate Distributions')
         plot_numeric_features(df, numeric_columns)
 
         # visualize categorical features for each cluster
         plot_categorical_features(df, categorical_columns)
 
-        # Plot Bivariate Distributions for both numeric and categorical data
-        st.subheader('Plot Bivariate Distributions')
-        plot_bivariate_distribution(df, numeric_columns, categorical_columns)
-
-
-        # Explain Clusters
-        #shap_values = calculate_shap_values(df, numeric_columns, categorical_columns)
         
          
         

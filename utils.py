@@ -4,8 +4,6 @@ import pandas as pd
 import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
-import shap
-
 
 import psycopg2
 import pandas as pd
@@ -144,26 +142,6 @@ def predict_cluster(df:pd.DataFrame, numeric_columns, categorical_columns)->pd.D
     return df
 
 
-################################################
-# Explain Cluster Predictions
-################################################
-st.cache
-def calculate_shap_values(df:pd.DataFrame, numeric_columns, categorical_columns):
-    """get shapley values"""
-
-    # load trained cluster model
-    with open('./artifacts/model.pickle', 'rb') as filename: # trained random forest classifier
-        model = pickle.load(filename)
-
-    explainer = shap.TreeExplainer(
-        model = model.best_estimator_, 
-        output = 'probability')
-    df_hotenc = hotencode_df(df, numeric_columns, categorical_columns)
-    X = df_hotenc.sample(100)
-    shap_values = explainer.shap_values(X)
-
-    return shap_values
-
 
 ################################################
 # Cluster Visualization
@@ -179,6 +157,28 @@ def plot_cluster_distribution(df:pd.DataFrame):
     plt.title('Cluster Distribution')
     plt.grid('on')
     st.pyplot(fig)
+
+st.cache
+def pie_plot_cluster_distribution(df:pd.DataFrame):
+    """plot cluster distribution"""
+    # Cluster Counts
+    cluster_labels = []
+    for c in df['cluster'].value_counts().index.tolist():
+        label = 'Cluster ' + str(c)
+        cluster_labels.append(label)
+    sizes = df['cluster'].value_counts().to_list()
+    explode = tuple(0 for _ in range(len(cluster_labels)))  
+    fig, ax = plt.subplots(figsize=(5,5))
+    ax.pie(
+        x=sizes, 
+        explode=explode, 
+        labels=cluster_labels, 
+        autopct='%1.1f%%',
+        shadow=False, 
+        startangle=90)
+    ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    st.pyplot(fig)    
+
 
 st.cache
 def plot_numeric_features(df:pd.DataFrame, numeric_columns):
@@ -232,38 +232,3 @@ def plot_categorical_features(df, categorical_columns):
             ax[c].set_xticks(ax[c].get_xticks(), ax[c].get_xticklabels(), rotation=90)
             ax[c].grid()
         st.pyplot(fig)
-
-
-st.cache
-def plot_bivariate_distribution(df, numeric_columns, categorical_columns):
-    "draw a bivariate distribution plot mixing both numeric and categorical features"
-    options_x = st.selectbox(
-        label = 'Select x-Feature',
-        options = numeric_columns + categorical_columns, 
-        )
-    options_y = st.selectbox(
-        label = 'Select y-Feature',
-        options = numeric_columns + categorical_columns,
-        )
-
-    fig, ax = plt.subplots(
-        figsize=(16,5), 
-        nrows=1, 
-        ncols=df['cluster'].nunique(), 
-        sharex=True, sharey=True)
-
-    for c in np.sort(df['cluster'].unique()):
-        sns.histplot(
-            data=df[df['cluster']==c], 
-            x=options_x, 
-            y=options_y,
-            bins=30,
-            pthresh=.025,
-            pmax=0.975,
-            cbar=True,
-            ax=ax[c]
-            )
-        ax[c].set_title('Cluster '+str(c))
-        if options_x not in numeric_columns:
-            ax[c].set_xticklabels(labels=df[options_x].unique(), rotation=90)
-    st.pyplot(fig)

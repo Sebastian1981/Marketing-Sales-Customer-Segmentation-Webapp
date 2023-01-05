@@ -6,7 +6,7 @@ from path import Path
 from segmentation_app import run_segment_app
 
 def main():
-    st.title("Let´s Segment Your Customers!")
+    st.title("Your Marketing App for Customer Segmentation!")
 
     menu = ["About", "Segmentation"]
     choice = st.sidebar.selectbox("Menu", menu)
