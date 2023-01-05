@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 #import os
-#from pathlib import Path
+from pathlib import Path
 
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder
@@ -29,7 +29,7 @@ def prepare_data(df:pd.DataFrame, numeric_columns, categorical_columns)->pd.Data
     ############################################
     # Load Model Artifacts
     ############################################
-    with open('\artifacts\numeric_imputer.pickle', 'rb') as filename: # trained model to impute missing numeric data
+    with open(Path('/artifacts/numeric_imputer.pickle'), 'rb') as filename: # trained model to impute missing numeric data
         numeric_imputer = pickle.load(filename)
 
     with open('\artifacts\categorical_imputer.pickle', 'rb') as filename: # trained model to impute missing categorical data
