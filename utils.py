@@ -5,19 +5,12 @@ import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-#import os
-from pathlib import Path
 
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder
 from feature_engine.encoding import RareLabelEncoder
 from feature_engine.outliers import Winsorizer
 
-
-# set paths
-#rootdir = os.getcwd()
-#ARTIFACS = Path(rootdir) / 'artifacts'
-#ARTIFACS = Path('./marketing-sales-customer-segmentation-webapp/artifacts')
 
 ################################################
 # Data Preparation
@@ -29,16 +22,16 @@ def prepare_data(df:pd.DataFrame, numeric_columns, categorical_columns)->pd.Data
     ############################################
     # Load Model Artifacts
     ############################################
-    with open(Path('./artifacts/numeric_imputer.pickle'), 'rb') as filename: # trained model to impute missing numeric data
+    with open('artifacnumeric_imputer.pickle', 'rb') as filename: # trained model to impute missing numeric data
         numeric_imputer = pickle.load(filename)
 
-    with open('\artifacts\categorical_imputer.pickle', 'rb') as filename: # trained model to impute missing categorical data
+    with open('categorical_imputer.pickle', 'rb') as filename: # trained model to impute missing categorical data
         categorical_imputer = pickle.load(filename) 
 
-    with open('\artifacts\rare_encoder.pickle', 'rb') as filename: # trained model to encode rare labels
+    with open('rare_encoder.pickle', 'rb') as filename: # trained model to encode rare labels
         rare_encoder = pickle.load(filename)
 
-    with open('.\artifacts\capper.pickle', 'rb') as filename: # trained model to cap outliers
+    with open('capper.pickle', 'rb') as filename: # trained model to cap outliers
         capper = pickle.load(filename)   
     
 
@@ -81,7 +74,7 @@ def hotencode_df(df:pd.DataFrame, numeric_columns, categorical_columns)->pd.Data
     """hotencode data frame"""
 
     # load one-hot encoder
-    with open('\artifacts\enc.pickle', 'rb') as filename: # trained one hot encoder
+    with open('enc.pickle', 'rb') as filename: # trained one hot encoder
         enc = pickle.load(filename)
 
     # one hot encoding categorical features
@@ -99,7 +92,7 @@ def predict_cluster(df:pd.DataFrame, numeric_columns, categorical_columns)->pd.D
     """predict clusters given df the its hotencoded version"""
 
     # load trained cluster model
-    with open('\artifacts\model.pickle', 'rb') as filename: # trained random forest classifier
+    with open('model.pickle', 'rb') as filename: # trained random forest classifier
         model = pickle.load(filename)
         
     # predict cluster
