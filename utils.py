@@ -17,7 +17,7 @@ from feature_engine.outliers import Winsorizer
 # set paths
 #rootdir = os.getcwd()
 #ARTIFACS = Path(rootdir) / 'artifacts'
-ARTIFACS = Path('/marketing-sales-customer-segmentation-webapp/artifacts')
+ARTIFACS = Path('./marketing-sales-customer-segmentation-webapp/artifacts')
 
 ################################################
 # Data Preparation
