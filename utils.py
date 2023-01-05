@@ -22,7 +22,7 @@ def prepare_data(df:pd.DataFrame, numeric_columns, categorical_columns)->pd.Data
     ############################################
     # Load Model Artifacts
     ############################################
-    with open('artifacnumeric_imputer.pickle', 'rb') as filename: # trained model to impute missing numeric data
+    with open('numeric_imputer.pickle', 'rb') as filename: # trained model to impute missing numeric data
         numeric_imputer = pickle.load(filename)
 
     with open('categorical_imputer.pickle', 'rb') as filename: # trained model to impute missing categorical data
