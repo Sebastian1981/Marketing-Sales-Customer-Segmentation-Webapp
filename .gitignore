@@ -136,6 +136,8 @@ dmypy.json
 
 # dont sync model Artifacts
 /artifacts
+*.pickle
 
 # never ever sync private infos
 private.txt
+
