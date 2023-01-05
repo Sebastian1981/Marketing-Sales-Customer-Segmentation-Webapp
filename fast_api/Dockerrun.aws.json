@@ -6,11 +6,9 @@
     },
     "Ports": [
       {
-        "ContainerPort": 8501,
-        "HostPort": 8501
+        "ContainerPort": 8080
       }
-    ],
-    "Logging": "/var/log/docker"
+    ]
   }
 
   
