@@ -4,7 +4,6 @@ import pandas as pd
 import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
-import psycopg2
 import pandas as pd
 
 from sklearn.impute import SimpleImputer
@@ -12,43 +11,6 @@ from sklearn.preprocessing import OneHotEncoder
 from feature_engine.encoding import RareLabelEncoder
 from feature_engine.outliers import Winsorizer
 
-################################################
-# Import Data from my DB
-################################################
-def get_data_from_my_postgre_db(password:str, table_name:str)->pd.DataFrame:
-    """connects to marketing_analytics db and returns data from table_name as pandas dataframe .
-    inputs: database password and table_name"""
-
-
-    # Connect to the database
-    conn = psycopg2.connect(
-        database="marketing_analytics", 
-        user="postgres", 
-        password=password, 
-        host="localhost", 
-        port="5432")
-
-    # Create a cursor object
-    cur = conn.cursor()
-
-    # Execute a SQL query
-    #cur.execute("SELECT * FROM bank_customers_churn_dataset")
-    cur.execute("SELECT * FROM " + table_name) 
-
-    # Get the column names from the cursor description
-    columns = [desc[0] for desc in cur.description]
-
-    # Fetch the results i.e. values
-    results = cur.fetchall()
-
-    # Create a dictionary mapping column names to values
-    data = [dict(zip(columns, row)) for row in results]
-
-    # Close the connection
-    conn.close()
-
-    # turn dictionary into dataframe
-    return pd.DataFrame.from_dict(data)
 
 
 
