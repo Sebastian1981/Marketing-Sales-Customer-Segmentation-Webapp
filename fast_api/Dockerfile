@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.9
 WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 COPY ./artifacts /code/artifacts

@@ -1,7 +1,6 @@
 import streamlit as st
 from path import Path
 
-
 #from utils import convert_df
 from segmentation_app import run_segment_app
 

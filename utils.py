@@ -4,10 +4,13 @@ import pandas as pd
 import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 import psycopg2
 import pandas as pd
 
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import OneHotEncoder
+from feature_engine.encoding import RareLabelEncoder
+from feature_engine.outliers import Winsorizer
 
 ################################################
 # Import Data from my DB
